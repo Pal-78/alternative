@@ -366,7 +366,8 @@ def home():
 
 
 # curl -X POST -H"Content-Type:application/json" -d@tweet.json http://url/api
-@app.route('/api', methods=['POST','GET'])
+#@app.route('/api', methods=['POST','GET'])
+@app.route('/api', methods=['POST'])
 def process_api():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
