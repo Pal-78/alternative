@@ -13,7 +13,7 @@ import string
 import re
 import flask
 from flask import Flask, request, jsonify
-import pickle
+#import pickle
 
 
 # In[20]:
@@ -44,7 +44,7 @@ re_l = re.compile(r'[^a-z ]+')
 
 
 # load model
-model = pickle.load(open('model1.pickle','rb'))
+#model = pickle.load(open('model1.pickle','rb'))
 
 
 # In[23]:
@@ -376,12 +376,13 @@ def process_api():
     results = {}
     for keys in json_data:
         tweet_p = pre_process_lem(json_data[keys])
-        score = model.predict([tweet_p])
-        score = score[0]
-        label = 'POSITIVE'
-        if score < 0.5:
-            label = 'NEGATIVE'
-        results[keys] = [label]
+        #score = model.predict([tweet_p])
+        #score = score[0]
+        #label = 'POSITIVE'
+        #if score < 0.5:
+        #    label = 'NEGATIVE'
+        #results[keys] = [label]
+        results[keys] = tweet_p
     return jsonify(results)
 
 
