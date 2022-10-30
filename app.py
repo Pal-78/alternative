@@ -48,9 +48,6 @@ re_l = re.compile(r'[^a-z ]+')
 
 # load model
 model = pickle.load(open('model1.pickle','rb'))
-# load tokenizer
-with open('tokenizer.pickle','rb') as handle:
-    tokenizer = pickle.load(handle)
 
 
 # In[23]:
