@@ -13,9 +13,6 @@ import string
 import re
 import flask
 from flask import Flask, request, jsonify
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import make_pipeline
 import pickle
 
 
