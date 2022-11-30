@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Presentation APP</title>
+    </head>
+
+    <body>
+      <br>
+      <h1>Future Vision Transport</h1>
+      <br>
+      <h2>Samples to test our prediction API</h2>
+      <br>
+          <p>Please select a picture :</p>
+                <table><form action="compute" method="POST">
+                  <td>
+                  <label>Selection :</label>
+                    <select name="choice" width="200px">
+                    {% for i in pic_list %}
+                        <option value="{{ i }}" SELECTED>{{ i }}</option>
+                    {% endfor %}
+                      </select>
+                      </td>
+                    <td>
+                      <input class="button1" type="submit" value="Process...">
+                    </td>
+                </form></table>
+            <br>
+        <h3>Results :</h3>
+        <img src="{{ user_image }}" alt="User Image" width="1200" height="600">
+    <br>
+    </body>
+</html>
