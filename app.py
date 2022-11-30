@@ -1,81 +1,75 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[19]:
+# In[1]:
 
 
-
-from flask import Flask, request, jsonify
-import pickle
-
-
-# In[20]:
+from flask import Flask, render_template, request
+import numpy as np
+import requests
+import matplotlib.pyplot as plt
 
 
-app = Flask(__name__)
+# In[2]:
 
 
+url='http://127.0.0.1:5000/predict'
+
+pic_list = np.loadtxt("tests/pic_list.csv", dtype=str).tolist()
+mask = np.load("tests/Mask.npy")
 
 
-# load model
-model = pickle.load(open('model1.pickle','rb'))
+# In[3]:
 
 
-# In[23]:
+app = Flask(__name__, static_url_path='/static')
 
 
-# In[24]:
+# In[4]:
 
 
-@app.route('/', methods=['GET'])
-def home():
-    return "<h1>Distant Tweet Sentiment Analyzer</h1><p>POST Jason data on /api</p>"
+@app.route('/')
+def index():
+    return render_template('index.html', pic_list=pic_list)
 
 
+# In[5]:
 
 
-# In[26]:
+@app.route('/compute', methods=['POST', 'GET'])
+def compute():
+    if request.method == 'POST':
+        pic_name = request.form['choice']
+        i = pic_list.index(pic_name)
+        pic = plt.imread('tests/'+pic_name)
+        pic_mask = mask[i]
+        files = {'image': open('tests/'+pic_name,'rb')}
+        r = requests.post(url, files=files)
+        if r.status_code == 200:
+            predicted_mask = r.json()[0]
+        else:
+            predicted_mask = np.zeros((224,224))
+        plt.subplot(1, 3, 1)
+        plt.title('picture')
+        plt.imshow(pic)
+        plt.subplot(1, 3, 2)
+        plt.title('mask')
+        plt.imshow(pic_mask)
+        plt.subplot(1, 3, 3)
+        plt.title('predicted mask')
+        plt.imshow(predicted_mask)
+        fn = 'static/result'+str(i)+'.png'
+        plt.savefig(fn)
+
+        return render_template('index.html', pic_list=pic_list, user_image=fn)
 
 
-# curl -X POST -H"Content-Type:application/json" -d@tweet.json http://url/api
-#@app.route('/api', methods=['POST','GET'])
-@app.route('/api', methods=['POST'])
-def process_api():
-    content_type = request.headers.get('Content-Type')
-    if (content_type == 'application/json'):
-        json_data = request.json
-    else:
-        return 'Content-Type not supported!'
-    results = {}
-    for keys in json_data:
-        score = model.predict([json_data[keys]])
-        score = score[0]
-        label = 'POSITIVE'
-        if score < 0.5:
-            label = 'NEGATIVE'
-        results[keys] = label
+# In[6]:
 
-
-
-    return jsonify(results)
-
-
-# In[27]:
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+    app.run(port=5001)
+    #app.run(debug=True, use_reloader=False)
 
 
 # In[ ]:
