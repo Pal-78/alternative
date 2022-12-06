@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # In[2]:
 
 
-url='http://127.0.0.1:5000/predict'
+url='https://api-ml78.herokuapp.com/predict'
 
 pic_list = np.loadtxt("tests/pic_list.csv", dtype=str).tolist()
 mask = np.load("tests/Mask.npy")
